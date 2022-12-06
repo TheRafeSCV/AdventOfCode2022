@@ -1,0 +1,23 @@
+import re
+
+with open('data.txt') as f:
+    lines = iter(f.read().splitlines())
+    cols = [[] for _ in range(10)]
+
+    for line in lines:
+        if not line:
+            break
+        if line.startswith(' 1'):
+            continue
+        for i, c in enumerate(line[1::4]):
+            if not c.isspace():
+                cols[i + 1].insert(0, c)
+
+    for line in lines:
+        count, frm, to = list(map(int, re.findall(r'-?[0-9]+', line)))
+        # print(count, frm, to)
+        for _ in range(count):
+            if cols[frm] != []:
+                cols[to].append(cols[frm].pop())
+
+print(''.join(s[-1] for s in cols[1:]))
